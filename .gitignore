@@ -1,0 +1,32 @@
+# Node dependencies
+application-code/app-tier/node_modules/
+application-code/web-tier/node_modules/
+
+# React build output (if built)
+application-code/web-tier/build/
+
+# Package lock files (optional to ignore; keep if you want reproducible installs)
+# application-code/app-tier/package-lock.json
+# application-code/web-tier/package-lock.json
+
+# IDE files
+.idea/
+*.iml
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+*.env
+
+# Optional test coverage/tools
+coverage/
+dist/
+.tmp/
