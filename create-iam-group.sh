@@ -30,4 +30,8 @@ aws iam attach-group-policy --group-name "$GROUP_NAME" \
 echo "🔵 Adding user '$USER_NAME' to group '$GROUP_NAME'..."
 aws iam add-user-to-group --user-name "$USER_NAME" --group-name "$GROUP_NAME" 2>/dev/null || echo "ℹ️ User already in group."
 
+SLEEP_DURATION=30
+echo "⏳ Waiting $SLEEP_DURATION seconds for IAM permissions to propagate..."
+sleep $SLEEP_DURATION
+
 echo "✅ Done."
