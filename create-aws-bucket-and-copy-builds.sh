@@ -4,8 +4,9 @@ export AWS_PAGER=""
 
 # === CONFIG ===
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
-S3_BUCKET="aws-transactions-app-bucket-1"
-REGION="us-east-1"
+S3_BUCKET="aws-transactions-app-bucket"
+REGION="us-west-1"
+export AWS_DEFAULT_REGION=$REGION
 FRONTEND_DIR="$PROJECT_ROOT/application-code/web-tier"
 BACKEND_DIR="$PROJECT_ROOT/application-code/app-tier"
 FRONTEND_BUILD_DIR="$FRONTEND_DIR/build"
@@ -20,7 +21,8 @@ else
 
 aws s3api create-bucket \
   --bucket "$S3_BUCKET" \
-  --region "$REGION"
+  --region "$REGION" \
+  --create-bucket-configuration LocationConstraint="$REGION"
 
   echo "✅ Bucket $S3_BUCKET created."
 fi
