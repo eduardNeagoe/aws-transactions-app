@@ -34,4 +34,16 @@ SLEEP_DURATION=30
 echo "⏳ Waiting $SLEEP_DURATION seconds for IAM permissions to propagate..."
 sleep $SLEEP_DURATION
 
+# === Wait for permission propagation ===
+#echo "⏳ Waiting for IAM permissions to propagate..."
+#MAX_RETRIES=10
+#for i in $(seq 1 $MAX_RETRIES); do
+#  if aws iam list-groups >/dev/null 2>&1; then
+#    echo "✅ IAM permission confirmed."
+#    break
+#  fi
+#  echo "⌛ Retry $i/$MAX_RETRIES: Waiting 3 seconds..."
+#  sleep 3
+#done
+
 echo "✅ Done."

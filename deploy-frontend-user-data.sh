@@ -1,19 +1,23 @@
 #!/bin/bash
-# Update all packages
+set -e
+
+echo "🔄 Updating system packages..."
 yum update -y
 
-# Install Nginx and AWS CLI to serve static content and pull from S3
+echo "📦 Installing Nginx and AWS CLI..."
 yum install -y nginx aws-cli
 
-# Enable Nginx to start on boot and start it now
+echo "🚀 Enabling and starting Nginx..."
 systemctl enable nginx
 systemctl start nginx
 
-# Clear default Nginx HTML content
+echo "🧹 Removing default Nginx content..."
 rm -rf /usr/share/nginx/html/*
 
-# Copy React build from S3 to Nginx HTML directory
+echo "⬇️ Downloading React build from S3..."
 aws s3 cp s3://aws-transactions-app-bucket/frontend/ /usr/share/nginx/html/ --recursive
 
-# Restart Nginx to serve the new frontend
+echo "🔁 Restarting Nginx..."
 systemctl restart nginx
+
+echo "✅ Frontend deployment script completed successfully."

@@ -116,19 +116,20 @@ aws ec2 run-instances \
   --user-data file://deploy-frontend-user-data.sh \
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=aws-transactions-app-frontend-ec2}]"
 
-# === Launch Backend ===
-echo ""
-echo "🚀 Launching Backend EC2 Instance..."
-aws ec2 run-instances \
-  --image-id "$AMI_ID" \
-  --instance-type "$INSTANCE_TYPE" \
-  --key-name "$KEY_NAME" \
-  --security-group-ids "$BACKEND_SG" \
-  --subnet-id "$BACKEND_SUBNET" \
-  --iam-instance-profile Name="$PROFILE_NAME" \
-  --associate-public-ip-address \
-  --user-data file://deploy-backend-user-data.sh \
-  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=aws-transactions-app-backend-ec2}]"
-
-echo ""
-echo "✅ Both frontend and backend EC2 instances are launching."
+#TODO re-enable
+## === Launch Backend ===
+#echo ""
+#echo "🚀 Launching Backend EC2 Instance..."
+#aws ec2 run-instances \
+#  --image-id "$AMI_ID" \
+#  --instance-type "$INSTANCE_TYPE" \
+#  --key-name "$KEY_NAME" \
+#  --security-group-ids "$BACKEND_SG" \
+#  --subnet-id "$BACKEND_SUBNET" \
+#  --iam-instance-profile Name="$PROFILE_NAME" \
+#  --associate-public-ip-address \
+#  --user-data file://deploy-backend-user-data.sh \
+#  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=aws-transactions-app-backend-ec2}]"
+#
+#echo ""
+#echo "✅ Both frontend and backend EC2 instances are launching."

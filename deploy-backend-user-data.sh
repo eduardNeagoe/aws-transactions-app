@@ -1,24 +1,28 @@
 #!/bin/bash
-# Update all packages
+set -e
+
+echo "🔄 Updating system packages..."
 yum update -y
 
-# Enable Amazon Corretto 17 (Java 17)
+echo "📦 Enabling Amazon Corretto 17..."
 amazon-linux-extras enable corretto17
 
-# Install Java 17, AWS CLI, and unzip utility
+echo "📦 Installing Java 17, AWS CLI, and unzip..."
 yum install -y java-17-amazon-corretto aws-cli unzip
 
-# Move to ec2-user's home directory
+echo "📁 Changing to EC2 user home directory..."
 cd /home/ec2-user || exit
 
-# Download the backend app zip file from S3
+echo "⬇️ Downloading backend app zip from S3..."
 aws s3 cp s3://aws-transactions-app-bucket/backend/app.zip .
 
-# Unzip the backend app
+echo "📂 Unzipping backend app..."
 unzip app.zip
 
-# Make the .jar file executable (precaution)
+echo "🔒 Making JAR file executable..."
 chmod +x *.jar
 
-# Run the Spring Boot app in the background and log output
+echo "🚀 Launching Spring Boot application..."
 nohup java -jar *.jar > app.log 2>&1 &
+
+echo "✅ Backend deployment script completed successfully."

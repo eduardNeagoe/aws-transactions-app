@@ -49,6 +49,55 @@ else
 fi
 
 echo ""
+echo "🧨 Terminating EC2 instances by tag..."
+INSTANCE_IDS=$(aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=aws-transactions-app-*-ec2" \
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text)
+if [[ -n "$INSTANCE_IDS" && "$INSTANCE_IDS" != "None" ]]; then
+  echo "🧨 Found EC2 instances: $INSTANCE_IDS"
+  aws ec2 terminate-instances --instance-ids $INSTANCE_IDS
+  echo "⏳ Waiting for EC2 instances to terminate..."
+  aws ec2 wait instance-terminated --instance-ids $INSTANCE_IDS
+  echo "✅ EC2 instances terminated."
+else
+  echo "ℹ️ No EC2 instances found with tag Name=aws-transactions-app-*-ec2"
+fi
+
+echo ""
+echo "🧼 Cleaning up IAM instance profiles..."
+PROFILE_NAME="ec2-aws-transactions-app-profile"
+if aws iam get-instance-profile --instance-profile-name "$PROFILE_NAME" >/dev/null 2>&1; then
+  ROLE_NAMES=$(aws iam get-instance-profile \
+    --instance-profile-name "$PROFILE_NAME" \
+    --query 'InstanceProfile.Roles[*].RoleName' \
+    --output text)
+
+  for ROLE in $ROLE_NAMES; do
+    echo "❌ Removing role $ROLE from profile $PROFILE_NAME"
+    aws iam remove-role-from-instance-profile \
+      --instance-profile-name "$PROFILE_NAME" \
+      --role-name "$ROLE"
+  done
+
+  echo "🗑️ Deleting instance profile: $PROFILE_NAME"
+  aws iam delete-instance-profile --instance-profile-name "$PROFILE_NAME"
+else
+  echo "ℹ️ Instance profile $PROFILE_NAME not found or already deleted."
+fi
+
+for ROLE in $ROLE_NAMES; do
+  echo "🔐 Detaching and deleting policies for role $ROLE..."
+  ATTACHED_POLICIES=$(aws iam list-attached-role-policies --role-name "$ROLE" --query "AttachedPolicies[*].PolicyArn" --output text)
+  for POLICY_ARN in $ATTACHED_POLICIES; do
+    aws iam detach-role-policy --role-name "$ROLE" --policy-arn "$POLICY_ARN"
+  done
+
+  echo "🗑️ Deleting role $ROLE..."
+  aws iam delete-role --role-name "$ROLE"
+done
+
+echo ""
 echo "🧼 Cleaning up VPC resources..."
 VPC_ID=$(aws ec2 describe-vpcs \
   --filters "Name=tag:Name,Values=$VPC_NAME" \

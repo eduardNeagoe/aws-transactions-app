@@ -16,9 +16,10 @@ echo ""
 echo "🌐 [3/5] Creating VPC, subnets, route table, and security groups..."
 bash ./create-aws-vpc.sh
 
-echo ""
-echo "🛢️  [4/5] Creating RDS PostgreSQL instance in private subnet..."
-bash ./create-aws-rds.sh
+#TODO re-enable
+#echo ""
+#echo "🛢️  [4/5] Creating RDS PostgreSQL instance in private subnet..."
+#bash ./create-aws-rds.sh
 
 echo ""
 echo "🚀️  [5/5] Deploying frontend and backend apps to EC2..."

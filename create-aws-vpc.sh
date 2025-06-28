@@ -55,9 +55,18 @@ create_subnet() {
   echo "$SUBNET_ID"
 }
 
+# === Public subnet for the frontend ===
 PUBLIC_SUBNET_ID=$(create_subnet "aws-transactions-app-public-subnet" "10.0.1.0/24" "$AZ1")
+# RDS needs 2 AZs so we neeed a subnet for each
 PRIVATE_SUBNET_ID_1=$(create_subnet "aws-transactions-app-private-subnet-1" "10.0.2.0/24" "$AZ1")
 PRIVATE_SUBNET_ID_2=$(create_subnet "aws-transactions-app-private-subnet-2" "10.0.3.0/24" "$AZ2")
+
+# === Wait for the subnets to become available ===
+#echo "⏳ Waiting for subnets to become available..."
+#aws ec2 wait subnet-available --subnet-ids \
+#  "$PUBLIC_SUBNET_ID" \
+#  "$PRIVATE_SUBNET_ID_1" \
+#  "$PRIVATE_SUBNET_ID_2"
 
 if [[ -z "$PRIVATE_SUBNET_ID_1" || -z "$PRIVATE_SUBNET_ID_2" ]]; then
   echo "❌ One or both private subnets failed to create. Exiting."
@@ -138,13 +147,26 @@ WEB_SG_ID=$(create_sg "web-sg" "Web tier SG")
 APP_SG_ID=$(create_sg "app-sg" "App tier SG")
 DB_SG_ID=$(create_sg "db-sg" "Database SG")
 
+
+#TODO
 # === Ingress rules (best effort) ===
-echo "🔧 Authorizing ingress rules (if not already present)..."
-aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 80  --cidr 0.0.0.0/0 2>/dev/null || true
-aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 443 --cidr 0.0.0.0/0 2>/dev/null || true
-aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 22  --cidr 0.0.0.0/0 2>/dev/null || true
-aws ec2 authorize-security-group-ingress --group-id "$APP_SG_ID" --protocol tcp --port 3000 --source-group "$WEB_SG_ID" 2>/dev/null || true
-aws ec2 authorize-security-group-ingress --group-id "$DB_SG_ID" --protocol tcp --port 5432 --source-group "$APP_SG_ID" 2>/dev/null || true
+#echo "🔧 Authorizing ingress rules (if not already present)..."
+#aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 80  --cidr 0.0.0.0/0 2>/dev/null || true
+#aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 443 --cidr 0.0.0.0/0 2>/dev/null || true
+#aws ec2 authorize-security-group-ingress --group-id "$WEB_SG_ID" --protocol tcp --port 22  --cidr 0.0.0.0/0 2>/dev/null || true
+#aws ec2 authorize-security-group-ingress --group-id "$APP_SG_ID" --protocol tcp --port 3000 --source-group "$WEB_SG_ID" 2>/dev/null || true
+#aws ec2 authorize-security-group-ingress --group-id "$DB_SG_ID" --protocol tcp --port 5432 --source-group "$APP_SG_ID" 2>/dev/null || true
+
+
+#aws ec2 authorize-security-group-ingress \
+#  --group-id sg-xxxxxxx \
+#  --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+#aws ec2 authorize-security-group-ingress \
+#  --group-id sg-0542b17fa0ca0740c \
+#  --protocol tcp \
+#  --port 80 \
+#  --cidr 0.0.0.0/0 \
 
 # === Done ===
 echo ""
