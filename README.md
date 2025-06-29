@@ -12,6 +12,63 @@ This project provisions a full-stack application on AWS using Terraform. It incl
 
 ---
 
+```
++--------------------------------------------------------------+
+|                        AWS VPC (10.0.0.0/16)                 |
+|  aws-transactions-app-vpc                                    |
+|                                                              |
+|  +---------------------+      +---------------------------+  |
+|  | Public Subnet       |      | Internet Gateway (IGW)    |  |
+|  | 10.0.1.0/24         |<---->| aws-transactions-app-igw  |  |
+|  |                     |      +---------------------------+  |
+|  | +----------------+  |                                     |
+|  | | EC2 Instance   |  |                                     |
+|  | | Frontend App   |  |                                     |
+|  | | Nginx Server   |  |                                     |
+|  | | Public IP      |  |                                     |
+|  | | Port 80/443/22 |  |                                     |
+|  | +----------------+  |                                     |
+|  +---------------------+                                     |
+|                                                              |
+|  +------------------------+   +-------------------------+    |
+|  | Private Subnet 1       |   | Private Subnet 2        |    |
+|  | 10.0.2.0/24            |   | 10.0.3.0/24             |    |
+|  |                        |   |                         |    |
+|  | +-------------------+  |   |                         |    |
+|  | | EC2 Instance      |  |   |                         |    |
+|  | | Backend App (Node)|  |   |  Unused. Reserved for   |    |
+|  | |                   |  |   |  future RDS replica.    |    |
+|  | | Port 3000/22      |  |   |                         |    |
+|  | +-------------------+  |   |                         |    |
+|  +------------------------+   +-------------------------+    |
+|        \                             /                       |
+|         \___________________________/                        |
+|                  |                                           |
+|                  v                                           |
+|        +----------------------------+                        |
+|        | RDS PostgreSQL             |                        |
+|        | aws-transactions-app-db    |                        |
+|        | Port 5432                  |                        |
+|        +----------------------------+                        |
+|                                                              |
+|  +----------------------------+                              |
+|  | S3 Bucket:                 |                              |
+|  | aws-transactions-app-bucket|                              |
+|  | - frontend/* (React build) |                              |
+|  | - backend/app.zip          |                              |
+|  +----------------------------+                              |
++--------------------------------------------------------------+
+```
+
+### Notes:
+•	The frontend EC2 instance is in a public subnet and connected to the internet via an Internet Gateway.
+•	The backend EC2 instance should be a private subnet and using NAT Gateway to install resources like node.js, aws-cli, and unzip. But the NAT Gateway is not part of AWS Free Tie, so, as a workaround, I moved the EC2 in the public subnet for it to be able to access the internat to download those resources.
+•	The RDS instance is only accessible from the backend EC2.
+•	The S3 bucket serves as the storage for frontend files (copied into Nginx) and the zipped backend app (downloaded and unzipped by the Node.js instance).
+
+
+---
+
 ## 🗂 Project Structure
 
 ```
