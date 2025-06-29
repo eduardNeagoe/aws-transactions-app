@@ -69,7 +69,7 @@ This project provisions a full-stack application on AWS using Terraform. It incl
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 aws-transactions-app/
@@ -90,7 +90,7 @@ aws-transactions-app/
 
 ---
 
-## 🔧 Prerequisites
+## Prerequisites
 
 - Terraform CLI
 - AWS CLI with credentials configured
@@ -100,7 +100,7 @@ aws-transactions-app/
 
 ---
 
-## 🧱 Terraform Components
+## Terraform Components
 
 ### S3 Uploads (`s3.tf`)
 
@@ -196,7 +196,7 @@ The RDS instance is only accessible from the backend's security group (`app_sg`)
 
 ---
 
-## ✅ Deployment Flow
+## Deployment Flow
 
 1. Run: `terraform init`
 2. Run: `terraform apply`
@@ -209,7 +209,7 @@ The RDS instance is only accessible from the backend's security group (`app_sg`)
 
 ---
 
-## ⚙️ Operations
+## Operations
 
 ### Terraform Commands
 
@@ -264,7 +264,7 @@ The RDS instance is only accessible from the backend's security group (`app_sg`)
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Node.js 18 requires glibc ≥ 2.28. Amazon Linux 2 supports Node.js 16.
 - Make sure the `app.zip` is built before apply.
