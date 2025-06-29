@@ -30,3 +30,23 @@ yarn-error.log*
 coverage/
 dist/
 .tmp/
+
+*.pem
+*.pub
+
+# Node.js artifacts
+application-code/app-tier/.env
+application-code/app-tier/app.log
+
+# React build output
+application-code/web-tier/build/
+
+# S3 object cache/temp
+*.aws-s3-temp/
+
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+

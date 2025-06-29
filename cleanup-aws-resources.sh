@@ -48,21 +48,21 @@ else
   echo "ℹ️ S3 bucket not found or already deleted."
 fi
 
-echo ""
-echo "🧨 Terminating EC2 instances by tag..."
-INSTANCE_IDS=$(aws ec2 describe-instances \
-  --filters "Name=tag:Name,Values=aws-transactions-app-*-ec2" \
-  --query "Reservations[*].Instances[*].InstanceId" \
-  --output text)
-if [[ -n "$INSTANCE_IDS" && "$INSTANCE_IDS" != "None" ]]; then
-  echo "🧨 Found EC2 instances: $INSTANCE_IDS"
-  aws ec2 terminate-instances --instance-ids $INSTANCE_IDS
-  echo "⏳ Waiting for EC2 instances to terminate..."
-  aws ec2 wait instance-terminated --instance-ids $INSTANCE_IDS
-  echo "✅ EC2 instances terminated."
-else
-  echo "ℹ️ No EC2 instances found with tag Name=aws-transactions-app-*-ec2"
-fi
+#echo ""
+#echo "🧨 Terminating EC2 instances by tag..."
+#INSTANCE_IDS=$(aws ec2 describe-instances \
+#  --filters "Name=tag:Name,Values=aws-transactions-app-*-ec2" \
+#  --query "Reservations[*].Instances[*].InstanceId" \
+#  --output text)
+#if [[ -n "$INSTANCE_IDS" && "$INSTANCE_IDS" != "None" ]]; then
+#  echo "🧨 Found EC2 instances: $INSTANCE_IDS"
+#  aws ec2 terminate-instances --instance-ids $INSTANCE_IDS
+#  echo "⏳ Waiting for EC2 instances to terminate..."
+#  aws ec2 wait instance-terminated --instance-ids $INSTANCE_IDS
+#  echo "✅ EC2 instances terminated."
+#else
+#  echo "ℹ️ No EC2 instances found with tag Name=aws-transactions-app-*-ec2"
+#fi
 
 echo ""
 echo "🧼 Cleaning up IAM instance profiles..."
